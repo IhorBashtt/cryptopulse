@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { getCoinChart } from "@/lib/coingecko";
 
 export async function GET(
   request: Request,
@@ -6,42 +7,10 @@ export async function GET(
 ) {
   const { id } = await params;
   const url = new URL(request.url);
-  const days = url.searchParams.get("days") ?? "7";
-
-  const searchParams = new URLSearchParams({
-    vs_currency: "usd",
-    days,
-  });
-
-  const headers: HeadersInit = {
-    Accept: "application/json",
-  };
-
-  const apiKey = process.env.COINGECKO_API_KEY;
-
-  if (apiKey) {
-    headers["x-cg-demo-api-key"] = apiKey;
-  }
+  const days = Number.parseInt(url.searchParams.get("days") ?? "7", 10);
 
   try {
-    const response = await fetch(
-      `https://api.coingecko.com/api/v3/coins/${id}/market_chart?${searchParams.toString()}`,
-      {
-        headers,
-        next: { revalidate: 60 },
-      },
-    );
-
-    if (!response.ok) {
-      return NextResponse.json(
-        {
-          error: `CoinGecko request failed with ${response.status} ${response.statusText}`,
-        },
-        { status: response.status },
-      );
-    }
-
-    const data = await response.json();
+    const data = await getCoinChart(id, Number.isFinite(days) ? days : 7);
 
     return NextResponse.json(data);
   } catch (error) {

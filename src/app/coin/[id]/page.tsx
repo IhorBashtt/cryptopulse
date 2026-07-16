@@ -1,26 +1,46 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CoinDetailClient } from "@/components/coin-detail/CoinDetailClient";
 import { StatsGrid } from "@/components/coin-detail/StatsGrid";
-import type { CoinDetail } from "@/lib/types/coingecko";
+import { getCoinDetail } from "@/lib/coingecko";
 
 interface CoinPageProps {
   params: Promise<{ id: string }>;
 }
 
+export async function generateMetadata({ params }: CoinPageProps): Promise<Metadata> {
+  const { id } = await params;
+
+  try {
+    const coin = await getCoinDetail(id);
+    const title = `${coin.name} (${coin.symbol.toUpperCase()}) | CryptoPulse`;
+    const description = `Track ${coin.name} price, market data, and chart history on CryptoPulse.`;
+
+    return {
+      title,
+      description,
+      openGraph: {
+        title,
+        description,
+        type: "website",
+        images: coin.image?.large ? [coin.image.large] : undefined,
+      },
+    };
+  } catch {
+    return {
+      title: "Coin details | CryptoPulse",
+      description: "CryptoPulse coin details",
+    };
+  }
+}
+
 export default async function CoinPage({ params }: CoinPageProps) {
   const { id } = await params;
 
-  const coinResponse = await fetch(`http://localhost:3000/api/coins/${id}`, {
-    next: { revalidate: 60 },
-  });
-
-  if (!coinResponse.ok) {
-    notFound();
-  }
-
-  const coinData = (await coinResponse.json()) as CoinDetail;
+  try {
+    const coinData = await getCoinDetail(id);
 
   return (
     <main className="flex flex-1 flex-col bg-zinc-50 px-4 py-8 dark:bg-black sm:px-6 lg:px-8">
@@ -65,4 +85,7 @@ export default async function CoinPage({ params }: CoinPageProps) {
       </div>
     </main>
   );
+  } catch {
+    notFound();
+  }
 }
