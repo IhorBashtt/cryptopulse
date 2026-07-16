@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Header } from "@/components/layout/Header";
+import { ReduxProvider } from "@/providers/ReduxProvider";
+import { ThemeProvider } from "@/providers/ThemeProvider";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -25,9 +28,34 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  const storedTheme = localStorage.getItem('cryptopulse:theme');
+                  const theme = storedTheme === 'light' || storedTheme === 'dark' ? storedTheme : 'dark';
+                  document.documentElement.classList.toggle('dark', theme === 'dark');
+                } catch (error) {
+                  document.documentElement.classList.add('dark');
+                }
+              })();
+            `,
+          }}
+        />
+      </head>
+      <body className="min-h-full flex flex-col">
+        <ThemeProvider>
+          <ReduxProvider>
+            <Header />
+            {children}
+          </ReduxProvider>
+        </ThemeProvider>
+      </body>
     </html>
   );
 }

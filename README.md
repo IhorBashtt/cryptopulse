@@ -1,36 +1,59 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# CryptoPulse
+
+CryptoPulse is a Next.js crypto dashboard with a portfolio tracker for monitoring market movement and managing a personal watchlist of holdings.
+
+## Features
+
+- Top-100 cryptocurrencies by market capitalization with price, 24h change, search, and sorting
+- Coin detail page with a price chart (24h / 7d / 30d / 1y) and key stats such as market cap, volume, ATH/ATL, and rank
+- Portfolio tracker for adding, editing, and removing holdings, with current value and P&L calculation
+- Dark and light theme with persisted user preference
+- SEO support with dynamic meta tags and Open Graph on coin pages, plus sitemap.xml and robots.txt
+
+## Tech Stack
+
+- Next.js (App Router)
+- TypeScript
+- Redux Toolkit + RTK Query
+- Tailwind CSS v4
+- Recharts
+- CoinGecko API (keyless public API, no registration required)
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
+git clone <repository-url>
+cd cryptopulse
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000 to view the app.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Environment variables are not required for the default setup because the project uses CoinGecko's free keyless public API. If you want to increase request limits, you can optionally create a .env.local file with:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```env
+COINGECKO_API_KEY=your_api_key_here
+```
 
-## Learn More
+## Live Demo
 
-To learn more about Next.js, take a look at the following resources:
+- [Live Demo](#) — add after deployment
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Screenshots
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Главная
+*(скриншот добавить сюда)*
 
-## Deploy on Vercel
+### Страница монеты
+*(скриншот добавить сюда)*
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Портфель
+*(скриншот добавить сюда)*
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Engineering notes
+
+- SSR/ISR is used for the home page and coin detail pages instead of a pure client-side fetch to improve SEO and provide a better first render experience.
+- RTK Query is used instead of plain useEffect + fetch for caching, request deduplication, and a cleaner data layer.
+- P&L is calculated from the latest 24h price change rather than from a manually entered purchase price, because the app does not currently record the buy price at the moment of adding a holding.
+- The portfolio is stored in localStorage rather than a database because this is a pet project without a backend; with a real backend, the data would be tied to a user account instead of a browser.
