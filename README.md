@@ -36,6 +36,8 @@ Environment variables are not required for the default setup because the project
 COINGECKO_API_KEY=your_api_key_here
 ```
 
+If you deploy to Vercel (or any other host), set `NEXT_PUBLIC_SITE_URL` to your production URL — it's used to generate correct absolute URLs in `sitemap.xml` and `robots.txt`. Without it, these fall back to `http://localhost:3000`, which works locally but is wrong in production.
+
 ## Live Demo
 
 - [Live Demo](https://cryptopulse-flame.vercel.app)
@@ -57,3 +59,5 @@ COINGECKO_API_KEY=your_api_key_here
 - RTK Query is used instead of plain useEffect + fetch for caching, request deduplication, and a cleaner data layer.
 - P&L is calculated from the latest 24h price change rather than from a manually entered purchase price, because the app does not currently record the buy price at the moment of adding a holding.
 - The portfolio is stored in localStorage rather than a database because this is a pet project without a backend; with a real backend, the data would be tied to a user account instead of a browser.
+- Performance optimizations include a debounced search input, memoized chart data transformation, and code-splitting the price chart component with next/dynamic (ssr: false), since Recharts is a heavy dependency not needed for the initial paint.
+- next-themes was replaced with a small custom theme provider after it started throwing a React 19 dev-mode warning tied to how it injects its FOUC-prevention script — the library hasn't been updated in over a year, so the fix uses the same technique (an inline script in the server-rendered layout) without depending on an unmaintained package.
