@@ -38,18 +38,18 @@ COINGECKO_API_KEY=your_api_key_here
 
 ## Live Demo
 
-- [Live Demo](#) — add after deployment
+- [Live Demo](https://cryptopulse-flame.vercel.app)
 
 ## Screenshots
 
 ### Главная
-*(скриншот добавить сюда)*
+![Главная](screenshots/homepage.png)
 
 ### Страница монеты
-*(скриншот добавить сюда)*
+![Страница монеты](screenshots/coin-detail.png)
 
 ### Портфель
-*(скриншот добавить сюда)*
+![Портфель](screenshots/portfolio.png)
 
 ## Engineering notes
 
