@@ -40,7 +40,9 @@ export function PortfolioSummary({ holdings }: PortfolioSummaryProps) {
         <div className="rounded-2xl border border-zinc-200 bg-zinc-50 p-4 dark:border-zinc-800 dark:bg-zinc-900">
           <p className="text-sm text-zinc-500">24h P&amp;L</p>
           <p className={`mt-2 text-2xl font-semibold ${pnl24h >= 0 ? "text-emerald-600" : "text-rose-600"}`}>
-            {pnl24h >= 0 ? "+" : ""}${pnl24h.toLocaleString(undefined, { maximumFractionDigits: 2 })}
+            {pnl24h === 0
+              ? "$0"
+              : `${pnl24h > 0 ? "+" : "-"}$${Math.abs(pnl24h).toLocaleString(undefined, { maximumFractionDigits: 2 })}`}
           </p>
         </div>
       </div>
